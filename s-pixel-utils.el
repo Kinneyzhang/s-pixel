@@ -1,39 +1,68 @@
+;;; s-pixel-utils.el --- Utility helpers for s-pixel  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2026 kinney
+
+;; Author: kinney
+;; Maintainer: kinney
+;; Version: 0.1.0
+;; Keywords: strings, convenience
+;; Package-Requires: ((emacs "27.1"))
+
+;; This file is not part of GNU Emacs.
+
+;;; Commentary:
+;;
+;; Internal helpers used while experimenting with pixel-aware text wrapping.
+;; The tokenizer keeps CJK characters as individual units and groups Latin text
+;; by word so callers can reason about visual chunks more naturally.  These
+;; functions are internal implementation helpers and may change without notice.
+
+;;; Code:
+
 (defun s-pixel--cjk-char-p (char)
-  "Return if char CHAR is cjk."
+  "Return non-nil if CHAR belongs to a CJK-related Unicode range.
+
+CHAR is an Emacs character code.  The covered ranges include common CJK
+ideographs, CJK extensions A and B, CJK punctuation, kana, Hangul, and
+CJK compatibility ideographs."
   (or
-   ;; CJK统一表意文字（基本区）
+   ;; CJK unified ideographs, basic block.
    (<= #x4E00 char #x9FFF)
-   ;; CJK扩展A区
+   ;; CJK extension A.
    (<= #x3400 char #x4DBF)
-   ;; CJK扩展B区（注意：超出16位范围）
+   ;; CJK extension B.  These code points are outside the BMP.
    (and (<= #x20000 char) (<= char #x2A6DF))
-   ;; CJK兼容/部首扩展等
-   ;; CJK符号和标点
+   ;; CJK symbols and punctuation.
    (<= #x3000 char #x303F)
-   ;; 日文假名
+   ;; Japanese kana.
    (<= #x3040 char #x30FF)
-   ;; 韩文谚文
+   ;; Hangul syllables.
    (<= #xAC00 char #xD7AF)
-   ;; CJK兼容表意文字
+   ;; CJK compatibility ideographs.
    (<= #xF900 char #xFAFF)))
 
 (defun s-pixel--split (string)
-  "Split STRING into a list: English by word, Chinese
-by character, punctuation attached to previous unit."
+  "Split STRING into visual text units.
+
+Latin text is grouped by word, CJK text is grouped by character, and
+punctuation is attached to the previous unit.
+
+Whitespace between units is skipped.  Return the units in their original
+order as strings without text properties."
   (with-temp-buffer
     (insert string)
     (goto-char (point-min))
     (let (result)
       (while (not (eobp))
-        ;; skip whitespace
+        ;; Ignore spacing between units; callers can decide how to reinsert it.
         (skip-syntax-forward "-")
         (unless (eobp)
           (let ((start (point)))
             (if (s-pixel--cjk-char-p (char-after))
                 (forward-char 1)
               (forward-word 1))
-            ;; attach punctuation
-            (while (and (not (eobp)) 
+            ;; Keep trailing punctuation with the preceding text unit.
+            (while (and (not (eobp))
                         (equal (char-syntax (char-after)) ?.))
               (forward-char 1))
             (push (buffer-substring-no-properties start (point))
@@ -62,3 +91,5 @@ by character, punctuation attached to previous unit."
 ;;   to-str)
 
 (provide 's-pixel-utils)
+
+;;; s-pixel-utils.el ends here
