@@ -7,6 +7,7 @@
 ;; Version: 0.1.0
 ;; Keywords: strings, convenience
 ;; Package-Requires: ((emacs "27.1") (s "1.12.0") (ekp "0"))
+;; License: GPL-3.0-or-later
 
 ;; This file is not part of GNU Emacs.
 

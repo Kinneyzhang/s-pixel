@@ -6,6 +6,7 @@
 ;; Maintainer: kinney
 ;; Version: 0.1.0
 ;; Keywords: strings, convenience
+;; License: GPL-3.0-or-later
 
 ;; This file is not part of GNU Emacs.
 

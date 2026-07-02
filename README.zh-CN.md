@@ -44,7 +44,8 @@ tokenizer 实验代码定义在 `s-pixel-utils.el` 中。
 
 - 支持 `string-pixel-width` 的 Emacs。建议使用 Emacs 27.1 或更新版本。
 - [`s.el`](https://github.com/magnars/s.el)，由 `s-pixel-pad` 使用。
-- `ekp`，由 `s-pixel-wrap` 使用，并由 `s-pixel.el` 直接依赖。
+- [`ekp`](https://github.com/Kinneyzhang/emacs-kp)，由 `s-pixel-wrap`
+  使用，并由 `s-pixel.el` 直接依赖。
 - 图形 Emacs frame，用于获得可靠的像素测量结果。
 
 像素测量使用当前选中 frame 和当前字体。GUI 与终端、不同字体、字体变更之后
@@ -57,6 +58,14 @@ tokenizer 实验代码定义在 `s-pixel-utils.el` 中。
 ```elisp
 (add-to-list 'load-path "/path/to/s-pixel")
 (require 's-pixel)
+```
+
+加载 `s-pixel` 前，需要确保 `s.el` 和 `ekp` 已安装，或者已经加入
+`load-path`：
+
+```elisp
+(add-to-list 'load-path "/path/to/emacs-kp")
+(add-to-list 'load-path "/path/to/s.el")
 ```
 
 只有在需要直接使用内部工具函数时，才单独加载 `s-pixel-utils`：
@@ -295,12 +304,13 @@ tokenizer 实验代码定义在 `s-pixel-utils.el` 中。
 
 ```sh
 emacs --batch -L . -l s-pixel-utils.el --eval "(message \"s-pixel-utils loaded\")"
-emacs --batch -L . -l s-pixel.el --eval "(message \"s-pixel loaded\")"
+emacs --batch -L . -L /path/to/emacs-kp -L /path/to/s.el -l s-pixel.el --eval "(message \"s-pixel loaded\")"
 ```
 
-由于主包依赖 `s.el` 和 `ekp`，第二个命令要求这些库已经在 Emacs 的
-`load-path` 中可用。
+由于主包依赖 `s.el` 和 `ekp`，第二个命令必须把这些库加入 Emacs 的
+`load-path`。
 
 ## 许可证
 
-当前仓库没有包含许可证文件。
+本项目使用 GNU General Public License v3.0 授权。完整许可证文本见
+[`LICENSE`](LICENSE)。

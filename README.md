@@ -46,7 +46,8 @@ in `s-pixel-utils.el`.
 
 - Emacs with `string-pixel-width` support.  Emacs 27.1 or newer is recommended.
 - [`s.el`](https://github.com/magnars/s.el), used by `s-pixel-pad`.
-- `ekp`, used by `s-pixel-wrap` and required by `s-pixel.el`.
+- [`ekp`](https://github.com/Kinneyzhang/emacs-kp), used by `s-pixel-wrap`
+  and required by `s-pixel.el`.
 - A graphical Emacs frame for reliable pixel measurements.
 
 Pixel measurement uses the selected frame and the current font.  Results can
@@ -60,6 +61,14 @@ Clone or place this repository somewhere on your machine, then add it to
 ```elisp
 (add-to-list 'load-path "/path/to/s-pixel")
 (require 's-pixel)
+```
+
+Make sure `s.el` and `ekp` are installed or available on `load-path` before
+loading `s-pixel`:
+
+```elisp
+(add-to-list 'load-path "/path/to/emacs-kp")
+(add-to-list 'load-path "/path/to/s.el")
 ```
 
 Load the internal utility helpers only when you need them directly:
@@ -309,12 +318,13 @@ Use the smallest relevant batch load checks while editing:
 
 ```sh
 emacs --batch -L . -l s-pixel-utils.el --eval "(message \"s-pixel-utils loaded\")"
-emacs --batch -L . -l s-pixel.el --eval "(message \"s-pixel loaded\")"
+emacs --batch -L . -L /path/to/emacs-kp -L /path/to/s.el -l s-pixel.el --eval "(message \"s-pixel loaded\")"
 ```
 
-Because the main package depends on `s.el` and `ekp`, the second command
-requires those libraries to be available on Emacs' `load-path`.
+Because the main package depends on `s.el` and `ekp`, the second command must
+include those libraries on Emacs' `load-path`.
 
 ## License
 
-No license file is currently included in this repository.
+This project is licensed under the GNU General Public License v3.0.  See
+[`LICENSE`](LICENSE) for the full license text.
